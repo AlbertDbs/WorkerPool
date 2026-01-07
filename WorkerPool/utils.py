@@ -21,8 +21,8 @@ def get_redis_connection():
             decode_responses=True
         )
         r.ping()
-        logger.info("Conexiune la Redis realizată cu succes!")
+        logger.info("Conexiune la Redis realizata cu succes!")
         return r
     except redis.ConnectionError:
-        logger.error("Nu mă pot conecta la Redis. Asigură-te că serverul rulează.")
+        logger.error("Nu se poate conecta la Redis. Asigura-te că serverul ruleaza.")
         sys.exit(1)
