@@ -6,7 +6,6 @@ import json
 def inspect_queue():
     r = get_redis_connection()
 
-    # Verificăm câte mesaje sunt
     count = r.llen(QUEUE_NAME)
     print(f"--- INSPECTIE COADA: {QUEUE_NAME} ---")
     print(f"Mesaje totale: {count}")

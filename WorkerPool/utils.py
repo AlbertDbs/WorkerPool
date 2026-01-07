@@ -1,16 +1,25 @@
 import redis
 import logging
 import sys
-from config import REDIS_HOST, REDIS_PORT, REDIS_DB
+import os
+from config import REDIS_HOST, REDIS_PORT, REDIS_DB, LOG_DIR
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
-)
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
 logger = logging.getLogger("WorkerPool")
+logger.setLevel(logging.INFO)
+logger.handlers = []
+
+formatter = logging.Formatter('%(asctime)s - [%(levelname)s] - %(message)s')
+
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
+file_handler = logging.FileHandler(os.path.join(LOG_DIR, 'app.log'), encoding='utf-8')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 def get_redis_connection():
     try:
@@ -20,9 +29,9 @@ def get_redis_connection():
             db=REDIS_DB,
             decode_responses=True
         )
+        # Test rapid
         r.ping()
-        logger.info("Conexiune la Redis realizata cu succes!")
         return r
     except redis.ConnectionError:
-        logger.error("Nu se poate conecta la Redis. Asigura-te că serverul ruleaza.")
+        logger.error("Nu se poate conecta la Redis. Serverul rulează?")
         sys.exit(1)
