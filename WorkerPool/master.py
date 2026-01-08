@@ -26,26 +26,26 @@ class MasterScheduler:
         options.headless = False
         options.add_argument('--no-first-run')
 
-        logger.info(f"Pornire Chrome de la: {options.binary_location}")
+        logger.info(f"Starting Chrome from: {options.binary_location}")
 
         try:
             self.driver = uc.Chrome(options=options, use_subprocess=True)
         except Exception as e:
-            logger.error(f"Eroare la pornire Chrome: {e}")
+            logger.error(f"Error starting Chrome: {e}")
             import sys
             sys.exit(1)
 
     def fetch_page_content(self):
         try:
             self.driver.get(self.start_url)
-            logger.info(f"Navighez la: {self.start_url}")
+            logger.info(f"Navigating to: {self.start_url}")
 
-            logger.info("Aștept incarcarea tabelului...")
+            logger.info("Waiting for table to load...")
             time.sleep(5)
 
             return self.driver.page_source
         except Exception as e:
-            logger.error(f"Eroare în browser: {e}")
+            logger.error(f"Error in browser: {e}")
             return None
         finally:
             if self.driver:
@@ -91,16 +91,16 @@ class MasterScheduler:
         tasks = self.parse_links(html)
 
         if not tasks:
-            logger.warning("Nu sunt task-uri de procesat.")
+            logger.warning("No tasks to process.")
             return
 
-        logger.info(f"Conectare la Redis...")
+        logger.info(f"Connecting to Redis...")
         try:
             r = get_redis_connection()
         except Exception:
             return
 
-        logger.info("Resetare statistici anterioare...")
+        logger.info("Resetting previous statistics...")
         r.set("stats:total_tasks", len(tasks))
         r.set("stats:success", 0)
         r.set("stats:failed", 0)
@@ -115,15 +115,15 @@ class MasterScheduler:
                 logger.info(f"ENQUEUED: {task['url']}")
                 count += 1
             except Exception as e:
-                logger.error(f"Eroare enqueuing: {e}")
+                logger.error(f"Error enqueuing: {e}")
 
-        logger.info(f"Finalizat! {count} task-uri trimise.")
+        logger.info(f"Finished! {count} tasks sent.")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--country', type=str, default='united-states',
-                        help='Numele țării din URL (ex: united-states, romania)')
+                        help='Country name from URL (e.g., united-states, romania)')
     args = parser.parse_args()
     if not os.path.exists(DOWNLOAD_DIR):
         os.makedirs(DOWNLOAD_DIR)

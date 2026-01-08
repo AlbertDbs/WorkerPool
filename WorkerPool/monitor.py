@@ -11,7 +11,7 @@ def show_dashboard():
     print("========================================")
     print("   WORKER POOL MONITORING DASHBOARD     ")
     print("========================================")
-    print("Apasa Ctrl+C pentru a opri monitorul.\n")
+    print("Press Ctrl+C to stop the monitor.\n")
 
     try:
         while True:
@@ -26,17 +26,17 @@ def show_dashboard():
             percent = (processed / total * 100) if total > 0 else 0
 
             sys.stdout.write("\033[K")
-            print(f"\r PROGRES: [{processed}/{total}] ({percent:.1f}%) | "
-                  f" Succes: {success} | "
-                  f" Eșecuri: {failed} | "
+            print(f"\r PROGRESS: [{processed}/{total}] ({percent:.1f}%) | "
+                  f" Success: {success} | "
+                  f" Failed: {failed} | "
                   f" Retries: {retries} | "
-                  f" Coadă: {queue_len}", end="\r")
+                  f" Queue: {queue_len}", end="\r")
 
             sys.stdout.flush()
             time.sleep(0.5)
 
     except KeyboardInterrupt:
-        print("\n\nMonitor oprit.")
+        print("\n\nMonitor stopped.")
 
 
 if __name__ == "__main__":
