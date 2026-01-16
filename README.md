@@ -86,9 +86,9 @@ python monitor.py
 
 Terminal 2: Run the Master
 The Master will scrape the source list (e.g., Top Websites) and populate the Redis queue.
-# Example: Scrape top sites for Turkey
+Example: Scrape top sites for Turkey
 python master.py --country turkey
-# Example: Scrape top sites for United States
+Example: Scrape top sites for United States
 python master.py --country united-states
 
 Terminal 3: Run Workers
